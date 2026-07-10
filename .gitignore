@@ -1,0 +1,10 @@
+# Godot 4+ specific ignores
+.godot/
+export_presets.cfg
+
+# C# and .NET specific ignores
+.mono/
+.vs/
+bin/
+obj/
+*.csproj.user
