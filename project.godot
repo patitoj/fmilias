@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="Familias"
-run/main_scene="uid://jwmx8k743t2o"
+run/main_scene="uid://bkhb1i7r4kyhu"
 config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+APIManager="*uid://bwh2rk7q22nun"
 
 [display]
 

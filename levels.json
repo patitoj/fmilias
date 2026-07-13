@@ -1,0 +1,18 @@
+[
+  {
+	"FamilyName": "COCINA",
+	"Objects": ["Cuchillo", "Horno", "Sartén", "Licuadora", "Espátula"]
+  },
+  {
+	"FamilyName": "GIMNASIO",
+	"Objects": ["Mancuerna", "Barra", "Polea", "Colchoneta", "Pesa"]
+  },
+  {
+	"FamilyName": "HARDWARE",
+	"Objects": ["Procesador", "Memoria", "Placa", "Disco", "Fuente"]
+  },
+  {
+	"FamilyName": "LITERATURA",
+	"Objects": ["Camus", "Wilde", "Rulfo", "Borges", "Poe"]
+  }
+]

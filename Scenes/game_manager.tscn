@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://jwmx8k743t2o"]
 
-[ext_resource type="Script" uid="uid://cykanaad5tjoh" path="res://GameManager.cs" id="1_70yv6"]
+[ext_resource type="Script" uid="uid://b3sr8if8n52fp" path="res://Scripts/Core/GameManager.cs" id="1_e5fcp"]
+[ext_resource type="Script" uid="uid://c3ps36pbrgsds" path="res://Scripts/UI/UIManager.cs" id="2_sq00h"]
 
 [node name="GameManager" type="Node2D" unique_id=1191067028]
-script = ExtResource("1_70yv6")
+script = ExtResource("1_e5fcp")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=619918940]
 
@@ -14,6 +15,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("2_sq00h")
 
 [node name="MainLayout" type="VBoxContainer" parent="CanvasLayer/MainUI" unique_id=698859545]
 layout_mode = 1
