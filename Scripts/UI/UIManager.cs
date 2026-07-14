@@ -44,12 +44,35 @@ public partial class UIManager : Control
     {
         foreach (Node child in _lettersBox.GetChildren()) child.QueueFree();
 
+        // --- CÁLCULO DINÁMICO DE TAMAÑO ---
+        // 1. Obtenemos el ancho real de la pantalla y usamos el 90% para dejar márgenes a los costados
+        float screenWidth = GetViewportRect().Size.X;
+        float safeWidth = screenWidth * 0.9f; 
+        
+        // 2. Definimos la separación entre cuadraditos (ej. 8 píxeles)
+        int separation = 8;
+        float totalSeparation = separation * (wordLength - 1);
+        
+        // 3. Calculamos el ancho ideal para que todas las letras entren perfecto
+        float calculatedWidth = (safeWidth - totalSeparation) / wordLength;
+        
+        // 4. Ponemos un tope máximo de 80px para que las palabras cortas no queden gigantes
+        int finalSizeX = (int)Mathf.Min(calculatedWidth, 80);
+        int finalSizeY = finalSizeX + 5; // Lo hacemos apenitas más alto que ancho (como tu 80x85 original)
+        
+        // 5. La fuente también se achica proporcionalmente al cuadrado
+        int fontSize = (int)(finalSizeX * 0.55f);
+
+        // Forzamos la separación en el contenedor
+        _lettersBox.AddThemeConstantOverride("separation", separation);
+        _lettersBox.Alignment = BoxContainer.AlignmentMode.Center;
+
         for (int i = 0; i < wordLength; i++)
         {
             Button slotButton = new Button();
             
-            // Cuadrados grandes
-            slotButton.CustomMinimumSize = new Vector2(80, 85); 
+            // Le aplicamos nuestra nueva matemática al tamaño
+            slotButton.CustomMinimumSize = new Vector2(finalSizeX, finalSizeY); 
             
             slotButton.Text = userAnswer[i] == '\0' ? " " : userAnswer[i].ToString();
             slotButton.Disabled = true; 
@@ -62,30 +85,33 @@ public partial class UIManager : Control
 
             if (userAnswer[i] != '\0')
             {
-                // Letra ingresada: Blanco puro con borde gris claro muy sutil
+                // Letra ingresada
                 slotStyle.BgColor = new Color("#FFFFFF");
-                slotStyle.BorderColor = new Color("#D1D1D1"); // Gris perlado suave
+                slotStyle.BorderColor = new Color("#D1D1D1"); 
                 slotStyle.BorderWidthTop = 2;
                 slotStyle.BorderWidthLeft = 2;
                 slotStyle.BorderWidthRight = 2;
-                slotStyle.BorderWidthBottom = 4; // Rebajamos el relieve de 6 a 4 para mayor sutileza
+                
+                // Si la tecla se achicó mucho, bajamos un poco el relieve para que no se deforme
+                slotStyle.BorderWidthBottom = finalSizeX < 50 ? 2 : 4; 
             }
             else
             {
-                // Hueco vacío: Gris cálido con borde sutil
+                // Hueco vacío
                 slotStyle.BgColor = _disabledSlotColor;
                 slotStyle.BorderColor = new Color("#C5C5C5"); 
                 slotStyle.BorderWidthTop = 2;
                 slotStyle.BorderWidthLeft = 2;
                 slotStyle.BorderWidthRight = 2;
-                slotStyle.BorderWidthBottom = 4;
+                slotStyle.BorderWidthBottom = finalSizeX < 50 ? 2 : 4;
             }
 
             slotButton.AddThemeStyleboxOverride("disabled", slotStyle);
             
-            // Letra oscura y grande para que resalte sobre el blanco
             slotButton.AddThemeColorOverride("font_disabled_color", _textColor);
-            slotButton.AddThemeFontSizeOverride("font_size", 45); 
+            
+            // Asignamos el tamaño de fuente inteligente
+            slotButton.AddThemeFontSizeOverride("font_size", fontSize); 
 
             _lettersBox.AddChild(slotButton);
         }
