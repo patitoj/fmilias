@@ -30,8 +30,8 @@ public partial class UIManager : Control
     public override void _Ready()
     {
         _imagesGrid = GetNode<GridContainer>("MainLayout/ImagesGrid");
-        _lettersBox = GetNode<HBoxContainer>("MainLayout/LettersBox");
-        _keyboardLayout = GetNode<VBoxContainer>("MainLayout/KeyboardCard/KeyboardLayout");
+        _lettersBox = GetNode<HBoxContainer>("MainLayout/BottomUI/LettersBox");
+        _keyboardLayout = GetNode<VBoxContainer>("MainLayout/BottomUI/KeyboardCard/KeyboardLayout");
         _levelLabel = GetNode<Label>("MainLayout/LevelLabel");
     }
 
@@ -129,58 +129,102 @@ public partial class UIManager : Control
 
             foreach (char letter in keyboardRows[r])
             {
+                // 1. EL ENVOLTORIO NEGRO
+                PanelContainer keyWrapper = new PanelContainer();
+                keyWrapper.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+                keyWrapper.CustomMinimumSize = new Vector2(0, 65); 
+                
+                StyleBoxFlat wrapperStyle = new StyleBoxFlat();
+                wrapperStyle.BgColor = _borderColor; 
+                wrapperStyle.CornerRadiusTopLeft = 14;
+                wrapperStyle.CornerRadiusTopRight = 14;
+                wrapperStyle.CornerRadiusBottomRight = 14;
+                wrapperStyle.CornerRadiusBottomLeft = 14;
+
+                // --- NUEVO: Sombra exterior suave ---
+                wrapperStyle.ShadowColor = new Color(0, 0, 0, 0.2f); // Negro al 20% de opacidad
+                wrapperStyle.ShadowSize = 4; // Difuminado sutil
+                wrapperStyle.ShadowOffset = new Vector2(0, 4); // Desplazada hacia abajo
+                // ------------------------------------
+
+                keyWrapper.AddThemeStyleboxOverride("panel", wrapperStyle);
+
+                // 2. EL MARGEN
+                MarginContainer margin = new MarginContainer();
+                margin.AddThemeConstantOverride("margin_top", 2);
+                margin.AddThemeConstantOverride("margin_left", 2);
+                margin.AddThemeConstantOverride("margin_right", 2);
+                margin.AddThemeConstantOverride("margin_bottom", 2);
+                keyWrapper.AddChild(margin);
+
+                // 3. LA TECLA REAL
                 Button keyButton = new Button();
                 keyButton.Text = letter.ToString();
-                
-                // --- 2. TECLADO GRANDE (Se estira a los costados) ---
-                keyButton.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
-                keyButton.CustomMinimumSize = new Vector2(0, 65); // Altura fija, ancho dinámico
+                keyButton.SizeFlagsVertical = Control.SizeFlags.ExpandFill; 
 
                 Color randomColor = _vividColors[random.Next(_vividColors.Length)];
                 
-                // --- 4. HOVER Y ANIMACIONES ---
-                StyleBoxFlat normalStyle = CreateCandyStyle(randomColor);
-                StyleBoxFlat hoverStyle = CreateCandyStyle(randomColor.Lightened(0.1f)); // Más brillante al pasar el dedo
-                StyleBoxFlat pressedStyle = CreateCandyStyle(randomColor, true);
-
-                keyButton.AddThemeStyleboxOverride("normal", normalStyle);
-                keyButton.AddThemeStyleboxOverride("hover", hoverStyle);
-                keyButton.AddThemeStyleboxOverride("pressed", pressedStyle);
-                keyButton.AddThemeStyleboxOverride("focus", normalStyle); // Evita el recuadro gris raro al hacer clic
+                keyButton.AddThemeStyleboxOverride("normal", CreateCandyStyle(randomColor));
+                keyButton.AddThemeStyleboxOverride("hover", CreateCandyStyle(randomColor.Lightened(0.1f))); 
+                keyButton.AddThemeStyleboxOverride("pressed", CreateCandyStyle(randomColor, true));
+                keyButton.AddThemeStyleboxOverride("focus", CreateCandyStyle(randomColor)); 
                 
-                // --- 3. LETRAS BLANCAS, GRUESAS Y SIN BORDE ---
                 keyButton.AddThemeColorOverride("font_color", new Color("#FFFFFF"));
-                keyButton.AddThemeFontSizeOverride("font_size", 34); // Letra mucho más grande
+                keyButton.AddThemeFontSizeOverride("font_size", 34);
 
                 string letterStr = letter.ToString();
                 keyButton.Pressed += () => OnLetterPressedAction?.Invoke(letterStr);
 
-                rowContainer.AddChild(keyButton);
+                margin.AddChild(keyButton);
+                rowContainer.AddChild(keyWrapper);
             }
 
-            // Tecla de borrar
+            // --- TECLA DE BORRAR ---
             if (r == 2)
             {
+                PanelContainer deleteWrapper = new PanelContainer();
+                deleteWrapper.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+                deleteWrapper.CustomMinimumSize = new Vector2(0, 65);
+                
+                StyleBoxFlat wrapperDelStyle = new StyleBoxFlat();
+                wrapperDelStyle.BgColor = _borderColor; 
+                wrapperDelStyle.CornerRadiusTopLeft = 14;
+                wrapperDelStyle.CornerRadiusTopRight = 14;
+                wrapperDelStyle.CornerRadiusBottomRight = 14;
+                wrapperDelStyle.CornerRadiusBottomLeft = 14;
+
+                // --- NUEVO: Sombra exterior para la tecla de borrar ---
+                wrapperDelStyle.ShadowColor = new Color(0, 0, 0, 0.2f);
+                wrapperDelStyle.ShadowSize = 4;
+                wrapperDelStyle.ShadowOffset = new Vector2(0, 4);
+                // ------------------------------------------------------
+
+                deleteWrapper.AddThemeStyleboxOverride("panel", wrapperDelStyle);
+
+                MarginContainer margin = new MarginContainer();
+                margin.AddThemeConstantOverride("margin_top", 2);
+                margin.AddThemeConstantOverride("margin_left", 2);
+                margin.AddThemeConstantOverride("margin_right", 2);
+                margin.AddThemeConstantOverride("margin_bottom", 2);
+                deleteWrapper.AddChild(margin);
+
                 Button deleteButton = new Button();
                 deleteButton.Text = "⌫"; 
-                deleteButton.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
-                deleteButton.CustomMinimumSize = new Vector2(0, 65);
+                deleteButton.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
                 
-                Color deleteColor = new Color("#FF6B6B"); 
-                StyleBoxFlat normalDel = CreateCandyStyle(deleteColor);
-                StyleBoxFlat hoverDel = CreateCandyStyle(deleteColor.Lightened(0.1f));
-                StyleBoxFlat pressedDel = CreateCandyStyle(deleteColor, true);
-
-                deleteButton.AddThemeStyleboxOverride("normal", normalDel);
-                deleteButton.AddThemeStyleboxOverride("hover", hoverDel);
-                deleteButton.AddThemeStyleboxOverride("pressed", pressedDel);
-                deleteButton.AddThemeStyleboxOverride("focus", normalDel);
+                Color deleteColor = new Color("#fe877c"); // Coral
+                deleteButton.AddThemeStyleboxOverride("normal", CreateCandyStyle(deleteColor));
+                deleteButton.AddThemeStyleboxOverride("hover", CreateCandyStyle(deleteColor.Lightened(0.1f)));
+                deleteButton.AddThemeStyleboxOverride("pressed", CreateCandyStyle(deleteColor, true));
+                deleteButton.AddThemeStyleboxOverride("focus", CreateCandyStyle(deleteColor));
                 
                 deleteButton.AddThemeColorOverride("font_color", new Color("#FFFFFF"));
                 deleteButton.AddThemeFontSizeOverride("font_size", 28);
                 
                 deleteButton.Pressed += () => OnDeletePressedAction?.Invoke();
-                rowContainer.AddChild(deleteButton);
+                
+                margin.AddChild(deleteButton);
+                rowContainer.AddChild(deleteWrapper);
             }
         }
     }
@@ -191,37 +235,24 @@ public partial class UIManager : Control
         StyleBoxFlat style = new StyleBoxFlat();
         style.BgColor = backgroundColor;
         
-        // Bordes redondeados
         style.CornerRadiusTopLeft = 12;
         style.CornerRadiusTopRight = 12;
         style.CornerRadiusBottomRight = 12;
         style.CornerRadiusBottomLeft = 12;
 
-        // Borde negro fino perimetral
-        style.BorderColor = _borderColor; 
-        style.BorderWidthTop = 2;
-        style.BorderWidthLeft = 2;
-        style.BorderWidthRight = 2;
-        style.BorderWidthBottom = 2;
+        // Ya no dependemos de las sombras fallidas. Usamos el Borde interno para la textura oscura
+        style.BorderColor = backgroundColor.Darkened(0.35f); 
         
         if (isPressed)
         {
-            // Al presionar, se elimina el relieve y la tecla "cae" hasta el fondo
-            style.ShadowSize = 0;
-            style.ShadowOffset = new Vector2(0, 0);
-            
-            // Empuja el texto exactamente la misma cantidad de píxeles que mide la base
-            style.ContentMarginTop = 12; 
+            // Al presionar, la base oscura desaparece y se hunde simulando un click físico
+            style.BorderWidthBottom = 0; 
+            style.ContentMarginTop = 10; // Empuja la letra blanca hacia abajo
         }
         else
         {
-            // 1. Aumentamos el contraste (Darkened 0.35f en lugar de 0.25f) para que sea más marcado
-            style.ShadowColor = backgroundColor.Darkened(0.35f); 
-            
-            style.ShadowSize = 0; // Sólido sin difuminar
-            
-            // 2. Duplicamos el grosor de la base (Offset Y en 12 en lugar de 6)
-            style.ShadowOffset = new Vector2(0, 12); 
+            // Estado normal: 10px de profundidad oscura en la base
+            style.BorderWidthBottom = 6; 
             style.ContentMarginTop = 0;
         }
 

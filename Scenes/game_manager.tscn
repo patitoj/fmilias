@@ -67,18 +67,23 @@ layout_mode = 2
 size_flags_vertical = 3
 columns = 2
 
-[node name="LettersBox" type="HBoxContainer" parent="CanvasLayer/MainUI/MainLayout" unique_id=1868393085]
-layout_mode = 2
-alignment = 1
-
 [node name="BottomMargin" type="Control" parent="CanvasLayer/MainUI/MainLayout" unique_id=1666078765]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 
-[node name="KeyboardCard" type="PanelContainer" parent="CanvasLayer/MainUI/MainLayout" unique_id=1451602894]
+[node name="BottomUI" type="VBoxContainer" parent="CanvasLayer/MainUI/MainLayout" unique_id=1573292453]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="LettersBox" type="HBoxContainer" parent="CanvasLayer/MainUI/MainLayout/BottomUI" unique_id=1868393085]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="KeyboardCard" type="PanelContainer" parent="CanvasLayer/MainUI/MainLayout/BottomUI" unique_id=1451602894]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7o0as")
 
-[node name="KeyboardLayout" type="VBoxContainer" parent="CanvasLayer/MainUI/MainLayout/KeyboardCard" unique_id=1663340151]
+[node name="KeyboardLayout" type="VBoxContainer" parent="CanvasLayer/MainUI/MainLayout/BottomUI/KeyboardCard" unique_id=1663340151]
 layout_mode = 2
 theme_override_constants/separation = 15

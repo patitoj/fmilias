@@ -1,6 +1,8 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+
 
 public partial class GameManager : Node2D
 {
@@ -21,8 +23,18 @@ public partial class GameManager : Node2D
         _uiManager.OnDeletePressedAction += OnDeletePressed;
         _bgColor = GetNode<ColorRect>("CanvasLayer/BgColor");
 
+        // ==========================================
+        // CÓDIGO DE PRODUCCIÓN (SUPABASE) - EN PAUSA
+        // ==========================================
+        /*
         APIManager api = GetNode<APIManager>("/root/APIManager");
         _levels = api.DownloadedLevels;
+        */
+
+        // ==========================================
+        // CÓDIGO DE DESARROLLO (LOCAL) - ACTIVO
+        // ==========================================
+        LoadLevelsFromLocalJson();
 
         // Comprobamos si hay datos guardados para reanudar o empezar de cero
         if (SaveSystem.HasSavedGame())
@@ -33,6 +45,35 @@ public partial class GameManager : Node2D
         else
         {
             StartLevel(0, 0, "");
+        }
+    }
+
+    // --- NUEVO MÉTODO DE CARGA LOCAL ---
+    private void LoadLevelsFromLocalJson()
+    {
+        string filePath = "res://levels.json"; 
+
+        if (!FileAccess.FileExists(filePath))
+        {
+            GD.PrintErr($"CRÍTICO: No se encontró el archivo {filePath}");
+            return;
+        }
+
+        using var file = FileAccess.Open(filePath, FileAccess.ModeFlags.Read);
+        string jsonString = file.GetAsText();
+
+        try
+        {
+            // PropertyNameCaseInsensitive permite que C# enlace el "FamilyName" de tu JSON
+            // con el [JsonPropertyName("family_name")] que ya tenías preparado para Supabase
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _levels = JsonSerializer.Deserialize<List<LevelData>>(jsonString, options);
+            
+            GD.Print($"ÉXITO: Se cargaron {_levels.Count} niveles desde el archivo local.");
+        }
+        catch (Exception e)
+        {
+            GD.PrintErr($"Error al leer el JSON: {e.Message}");
         }
     }
 
@@ -51,7 +92,7 @@ public partial class GameManager : Node2D
         _currentMistakes = mistakes;
         _userAnswer = new char[_currentLevel.FamilyName.Length];
 
-        UpdateBackgroundColor(_currentLevel.FamilyName);
+        // UpdateBackgroundColor(_currentLevel.FamilyName);
 
         // Si hay una respuesta guardada y coincide en longitud, la restauramos
         if (!string.IsNullOrEmpty(savedAnswer) && savedAnswer.Length == _currentLevel.FamilyName.Length)
@@ -152,7 +193,7 @@ public partial class GameManager : Node2D
 
         SaveSystem.SaveGameState(_currentLevelIndex, _currentMistakes, answerStr);
     }
-    private void UpdateBackgroundColor(string categoryName)
+    /*private void UpdateBackgroundColor(string categoryName)
     {
         // Asignamos un color pastel de la paleta según la familia de la palabra
         switch (categoryName.ToUpper())
@@ -173,5 +214,5 @@ public partial class GameManager : Node2D
                 _bgColor.Color = new Color("#FDF6E3"); // Crema por defecto
                 break;
         }
-    }
+    }*/
 }
