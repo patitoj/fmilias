@@ -5,6 +5,9 @@ using System.Collections.Generic;
 public partial class UIManager : Control
 {
     private Label _levelLabel;
+
+    private PanelContainer _levelCard; // NUEVO NODO
+    private Button _backButton; // NUEVO NODO
     private GridContainer _imagesGrid;
     private HBoxContainer _lettersBox;
     private VBoxContainer _keyboardLayout;
@@ -12,6 +15,7 @@ public partial class UIManager : Control
     // Eventos (Delegados)
     public Action<string> OnLetterPressedAction;
     public Action OnDeletePressedAction;
+    public Action OnBackButtonPressedAction;
 
     // --- PALETA DE COLORES "ALGODÓN DE AZÚCAR" ---
     private readonly Color[] _vividColors = new Color[]
@@ -32,7 +36,125 @@ public partial class UIManager : Control
         _imagesGrid = GetNode<GridContainer>("MainLayout/ImagesGrid");
         _lettersBox = GetNode<HBoxContainer>("MainLayout/BottomUI/LettersBox");
         _keyboardLayout = GetNode<VBoxContainer>("MainLayout/BottomUI/KeyboardCard/KeyboardLayout");
-        _levelLabel = GetNode<Label>("MainLayout/LevelLabel");
+        
+        // --- RUTAS ACTUALIZADAS ---
+        // El LevelCard está suelto arriba de todo en el MainLayout
+        _levelCard = GetNode<PanelContainer>("MainLayout/LevelCard");
+        _levelLabel = GetNode<Label>("MainLayout/LevelCard/MarginContainer/LevelLabel");
+        
+        // El BackButton ahora es hijo directo de MainUI
+        _backButton = GetNode<Button>("BackButton");
+
+        SetupTopUI();
+    }
+
+    private void SetupTopUI()
+    {
+        // 1. Estilo de la Tarjeta del Nivel (Rectángulo grande colgante)
+        
+        // Agrandamos la tarjeta (Ancho, Alto). Podés subir estos números si la querés aún más gigante.
+        _levelCard.CustomMinimumSize = new Vector2(400, 110); 
+        _levelCard.AddThemeStyleboxOverride("panel", CreateTopCardStyle(new Color("#A8E6CF"))); // Verde menta
+        
+        // Configuramos la fuente
+        _levelLabel.AddThemeColorOverride("font_color", _textColor);
+        _levelLabel.AddThemeFontSizeOverride("font_size", 34);
+
+        // --- MAGIA DE ALINEACIÓN CENTER BOTTOM ---
+        // Le decimos al texto que ocupe toda la tarjeta
+        _levelLabel.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
+        _levelLabel.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+        
+        // Alineamos la física del texto abajo y al centro
+        _levelLabel.VerticalAlignment = VerticalAlignment.Bottom;
+        _levelLabel.HorizontalAlignment = HorizontalAlignment.Center;
+
+        // Agarramos el MarginContainer que está adentro de la tarjeta para darle el margen inferior
+        MarginContainer cardMargin = _levelCard.GetNode<MarginContainer>("MarginContainer");
+        if (cardMargin != null)
+        {
+            cardMargin.AddThemeConstantOverride("margin_bottom", 15); // Espacio entre el texto y el borde
+            cardMargin.AddThemeConstantOverride("margin_top", 0);
+        }
+        // -----------------------------------------
+
+        // 2. Estilo del Botón de Atrás
+        _backButton.Text = "◄"; 
+        _backButton.CustomMinimumSize = new Vector2(60, 60); 
+        
+        Color backColor = new Color("#fe877c"); // Coral
+        
+        _backButton.AddThemeStyleboxOverride("normal", CreateCandyStyle(backColor));
+        _backButton.AddThemeStyleboxOverride("hover", CreateCandyStyle(backColor.Lightened(0.1f)));
+        _backButton.AddThemeStyleboxOverride("pressed", CreateCandyStyle(backColor, true));
+        _backButton.AddThemeStyleboxOverride("focus", CreateCandyStyle(backColor));
+        
+        _backButton.AddThemeColorOverride("font_color", new Color("#FFFFFF"));
+        _backButton.AddThemeFontSizeOverride("font_size", 28);
+        
+        _backButton.Pressed += () => OnBackButtonPressedAction?.Invoke();
+    }
+
+    // --- NUEVO ESTILO: TARJETA COLGANTE (Sin borde negro, con efecto Jelly) ---
+    private StyleBoxFlat CreateTopCardStyle(Color bgColor)
+    {
+        StyleBoxFlat style = new StyleBoxFlat();
+        style.BgColor = bgColor;
+        
+        // Arriba recto, abajo súper redondo
+        style.CornerRadiusTopLeft = 0;
+        style.CornerRadiusTopRight = 0;
+        style.CornerRadiusBottomRight = 24;
+        style.CornerRadiusBottomLeft = 24;
+        
+        // 1. Usamos el mismo color de fondo pero oscurecido para la profundidad
+        // El método Darkened calcula automáticamente un tono más oscuro
+        style.BorderColor = bgColor.Darkened(0.15f); 
+        
+        // 2. Eliminamos los bordes negros finos perimetrales (Top, Left, Right en 0)
+        style.BorderWidthTop = 0; 
+        style.BorderWidthLeft = 0;
+        style.BorderWidthRight = 0;
+        
+        // 3. Dejamos solo el relieve inferior bien grueso
+        style.BorderWidthBottom = 7; 
+        
+        // 4. Agregamos la pequeña sombra exterior suave hacia abajo
+        style.ShadowColor = new Color(0, 0, 0, 0.15f); // Negro al 15% de opacidad
+        style.ShadowSize = 6; // Difuminado suave
+        style.ShadowOffset = new Vector2(0, 4); // Desplazada hacia abajo
+        
+        return style;
+    }
+
+    private StyleBoxFlat CreatePillStyle(Color bgColor, bool isPressed = false)
+    {
+        StyleBoxFlat style = new StyleBoxFlat();
+        style.BgColor = bgColor;
+        
+        // Bordes súper redondeados
+        style.CornerRadiusTopLeft = 30;
+        style.CornerRadiusTopRight = 30;
+        style.CornerRadiusBottomRight = 30;
+        style.CornerRadiusBottomLeft = 30;
+        
+        style.BorderColor = _borderColor; // Borde negro exterior
+        style.BorderWidthTop = 2;
+        style.BorderWidthLeft = 2;
+        style.BorderWidthRight = 2;
+        
+        if (isPressed)
+        {
+            style.BorderWidthBottom = 2;
+            style.ContentMarginTop = 6; // Empuja el contenido al presionar
+        }
+        else
+        {
+            style.BorderWidthBottom = 6; // Relieve 3D grueso
+            style.ContentMarginTop = 0;
+        }
+
+        return style;
     }
 
     public void UpdateLevelLabel(int levelNumber)

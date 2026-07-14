@@ -21,6 +21,7 @@ public partial class GameManager : Node2D
         _uiManager = GetNode<UIManager>("CanvasLayer/MainUI");
         _uiManager.OnLetterPressedAction += OnKeyPressed;
         _uiManager.OnDeletePressedAction += OnDeletePressed;
+        _uiManager.OnBackButtonPressedAction += GoToMainMenu;
         _bgColor = GetNode<ColorRect>("CanvasLayer/BgColor");
 
         // ==========================================
@@ -46,6 +47,11 @@ public partial class GameManager : Node2D
         {
             StartLevel(0, 0, "");
         }
+    }
+
+    private void GoToMainMenu()
+    {
+        GetTree().ChangeSceneToFile("res://Scenes/main_menu.tscn");
     }
 
     // --- NUEVO MÉTODO DE CARGA LOCAL ---

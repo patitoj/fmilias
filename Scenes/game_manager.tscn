@@ -56,11 +56,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="LevelLabel" type="Label" parent="CanvasLayer/MainUI/MainLayout" unique_id=799545033]
+[node name="LevelCard" type="PanelContainer" parent="CanvasLayer/MainUI/MainLayout" unique_id=1634955330]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "NIVEL 1"
-horizontal_alignment = 1
+size_flags_horizontal = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MainUI/MainLayout/LevelCard" unique_id=1619770900]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 10
+
+[node name="LevelLabel" type="Label" parent="CanvasLayer/MainUI/MainLayout/LevelCard/MarginContainer" unique_id=945106807]
+layout_mode = 2
 
 [node name="ImagesGrid" type="GridContainer" parent="CanvasLayer/MainUI/MainLayout" unique_id=325461608]
 layout_mode = 2
@@ -87,3 +95,11 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_7o0as")
 [node name="KeyboardLayout" type="VBoxContainer" parent="CanvasLayer/MainUI/MainLayout/BottomUI/KeyboardCard" unique_id=1663340151]
 layout_mode = 2
 theme_override_constants/separation = 15
+
+[node name="BackButton" type="Button" parent="CanvasLayer/MainUI" unique_id=275682735]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 37.0
+offset_bottom = 48.0
+text = "a"
