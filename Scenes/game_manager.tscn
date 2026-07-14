@@ -1,12 +1,42 @@
 [gd_scene format=3 uid="uid://jwmx8k743t2o"]
 
 [ext_resource type="Script" uid="uid://b3sr8if8n52fp" path="res://Scripts/Core/GameManager.cs" id="1_e5fcp"]
+[ext_resource type="FontFile" uid="uid://fpxki7h747fh" path="res://Assets/Fonts/Fredoka_Condensed-Bold.ttf" id="2_mmt5l"]
 [ext_resource type="Script" uid="uid://c3ps36pbrgsds" path="res://Scripts/UI/UIManager.cs" id="2_sq00h"]
+
+[sub_resource type="Theme" id="Theme_e5fcp"]
+default_font = ExtResource("2_mmt5l")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7o0as"]
+content_margin_left = 15.0
+content_margin_top = 45.0
+content_margin_right = 15.0
+content_margin_bottom = 20.0
+bg_color = Color(0.65882355, 0.9019608, 0.8117647, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
 
 [node name="GameManager" type="Node2D" unique_id=1191067028]
 script = ExtResource("1_e5fcp")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=619918940]
+
+[node name="BgColor" type="ColorRect" parent="CanvasLayer" unique_id=990328195]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.99215686, 0.9647059, 0.8901961, 1)
+
+[node name="BgPattern" type="TextureRect" parent="CanvasLayer/BgColor" unique_id=2045222604]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 1
 
 [node name="MainUI" type="Control" parent="CanvasLayer" unique_id=385312953]
 layout_mode = 3
@@ -15,6 +45,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_e5fcp")
 script = ExtResource("2_sq00h")
 
 [node name="MainLayout" type="VBoxContainer" parent="CanvasLayer/MainUI" unique_id=698859545]
@@ -40,9 +71,14 @@ columns = 2
 layout_mode = 2
 alignment = 1
 
-[node name="KeyboardLayout" type="VBoxContainer" parent="CanvasLayer/MainUI/MainLayout" unique_id=1663340151]
-layout_mode = 2
-
 [node name="BottomMargin" type="Control" parent="CanvasLayer/MainUI/MainLayout" unique_id=1666078765]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
+
+[node name="KeyboardCard" type="PanelContainer" parent="CanvasLayer/MainUI/MainLayout" unique_id=1451602894]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_7o0as")
+
+[node name="KeyboardLayout" type="VBoxContainer" parent="CanvasLayer/MainUI/MainLayout/KeyboardCard" unique_id=1663340151]
+layout_mode = 2
+theme_override_constants/separation = 15

@@ -12,11 +12,14 @@ public partial class GameManager : Node2D
     private int _currentMistakes = 0;
     private char[] _userAnswer;
 
+    private ColorRect _bgColor;
+
     public override void _Ready()
     {
         _uiManager = GetNode<UIManager>("CanvasLayer/MainUI");
         _uiManager.OnLetterPressedAction += OnKeyPressed;
         _uiManager.OnDeletePressedAction += OnDeletePressed;
+        _bgColor = GetNode<ColorRect>("CanvasLayer/BgColor");
 
         APIManager api = GetNode<APIManager>("/root/APIManager");
         _levels = api.DownloadedLevels;
@@ -47,6 +50,8 @@ public partial class GameManager : Node2D
         _currentLevel = _levels[index];
         _currentMistakes = mistakes;
         _userAnswer = new char[_currentLevel.FamilyName.Length];
+
+        UpdateBackgroundColor(_currentLevel.FamilyName);
 
         // Si hay una respuesta guardada y coincide en longitud, la restauramos
         if (!string.IsNullOrEmpty(savedAnswer) && savedAnswer.Length == _currentLevel.FamilyName.Length)
@@ -146,5 +151,27 @@ public partial class GameManager : Node2D
         string answerStr = new string(saveChars);
 
         SaveSystem.SaveGameState(_currentLevelIndex, _currentMistakes, answerStr);
+    }
+    private void UpdateBackgroundColor(string categoryName)
+    {
+        // Asignamos un color pastel de la paleta según la familia de la palabra
+        switch (categoryName.ToUpper())
+        {
+            case "COCINA":
+                _bgColor.Color = new Color("#FFB7B2"); // Rosa salmón
+                break;
+            case "GIMNASIO":
+                _bgColor.Color = new Color("#B5EAD7"); // Verde menta
+                break;
+            case "HARDWARE":
+                _bgColor.Color = new Color("#C7CEEA"); // Lavanda pastel
+                break;
+            case "LITERATURA":
+                _bgColor.Color = new Color("#FFDAC1"); // Durazno suave
+                break;
+            default:
+                _bgColor.Color = new Color("#FDF6E3"); // Crema por defecto
+                break;
+        }
     }
 }
