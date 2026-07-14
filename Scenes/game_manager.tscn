@@ -70,14 +70,21 @@ theme_override_constants/margin_bottom = 10
 [node name="LevelLabel" type="Label" parent="CanvasLayer/MainUI/MainLayout/LevelCard/MarginContainer" unique_id=945106807]
 layout_mode = 2
 
+[node name="EspaciadorArriba" type="Control" parent="CanvasLayer/MainUI/MainLayout" unique_id=490656586]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_vertical = 3
+
 [node name="ImagesGrid" type="GridContainer" parent="CanvasLayer/MainUI/MainLayout" unique_id=325461608]
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 3
 columns = 2
 
 [node name="BottomMargin" type="Control" parent="CanvasLayer/MainUI/MainLayout" unique_id=1666078765]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 35)
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="BottomUI" type="VBoxContainer" parent="CanvasLayer/MainUI/MainLayout" unique_id=1573292453]
 layout_mode = 2

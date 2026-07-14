@@ -246,19 +246,99 @@ public partial class UIManager : Control
         int objectsToShow = 2 + mistakes;
         if (objectsToShow > objects.Count) objectsToShow = objects.Count;
 
+        // --- 1. LÓGICA DE COLUMNAS ---
+        // Usamos 3 columnas por defecto (hasta 9 objetos). Si hay 10 o más, pasamos a 4 columnas.
+        int columns = objectsToShow > 9 ? 4 : 3;
+        _imagesGrid.Columns = columns;
+
+        int separation = 15;
+        _imagesGrid.AddThemeConstantOverride("h_separation", separation);
+        _imagesGrid.AddThemeConstantOverride("v_separation", separation);
+
+        // --- 2. CÁLCULO DE TAMAÑO (BLOQUEADO A 3x3 o más) ---
+        float screenWidth = GetViewportRect().Size.X;
+        float screenHeight = GetViewportRect().Size.Y;
+
+        float safeWidth = screenWidth * 0.94f;
+        float safeHeight = screenHeight * 0.55f; 
+
+        // Para que las cartas no cambien de tamaño mientras se van sumando del 1 al 9, 
+        // obligamos al cálculo a basarse en una grilla llena de 3x3.
+        int calcColumns = columns;
+        int calcRows = columns == 3 ? 3 : Mathf.CeilToInt((float)objectsToShow / columns);
+
+        // Calculamos cuánto espacio tiene cada "hueco" teórico de esa grilla 3x3 (o 4xX)
+        float maxCardWidth = (safeWidth - (separation * (calcColumns - 1))) / calcColumns;
+        float maxCardHeight = (safeHeight - (separation * (calcRows - 1))) / calcRows;
+
+        float finalCardWidth = maxCardWidth;
+        float finalCardHeight = finalCardWidth * 1.25f;
+
+        if (finalCardHeight > maxCardHeight)
+        {
+            finalCardHeight = maxCardHeight;
+            finalCardWidth = finalCardHeight * 0.8f; 
+        }
+
+        int innerMargin = (int)(finalCardWidth * 0.1f); 
+
         for (int i = 0; i < objectsToShow; i++)
         {
-            Label hintLabel = new Label();
-            hintLabel.Text = objects[i];
-            hintLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            hintLabel.VerticalAlignment = VerticalAlignment.Center;
-            hintLabel.CustomMinimumSize = new Vector2(200, 80);
+            PanelContainer card = new PanelContainer();
+            card.CustomMinimumSize = new Vector2(finalCardWidth, finalCardHeight); 
+            card.AddThemeStyleboxOverride("panel", CreateHintCardStyle());
+
+            MarginContainer margin = new MarginContainer();
+            margin.AddThemeConstantOverride("margin_top", innerMargin);
+            margin.AddThemeConstantOverride("margin_bottom", innerMargin);
+            margin.AddThemeConstantOverride("margin_left", innerMargin);
+            margin.AddThemeConstantOverride("margin_right", innerMargin);
+            card.AddChild(margin);
+
+            VBoxContainer vbox = new VBoxContainer();
+            vbox.Alignment = BoxContainer.AlignmentMode.Center;
+            vbox.AddThemeConstantOverride("separation", 5);
+            margin.AddChild(vbox);
+
+            TextureRect imageRect = new TextureRect();
+            imageRect.ExpandMode = TextureRect.ExpandModeEnum.IgnoreSize;
+            imageRect.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
+            imageRect.SizeFlagsVertical = Control.SizeFlags.ExpandFill; 
             
-            // Le damos color oscuro a la fuente de las pistas también
-            hintLabel.AddThemeColorOverride("font_color", _textColor);
+            imageRect.Texture = GD.Load<Texture2D>("res://icon.svg"); 
+            vbox.AddChild(imageRect);
+
+            Label nameLabel = new Label();
+            nameLabel.Text = objects[i].ToUpper(); 
+            nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
+            nameLabel.AddThemeColorOverride("font_color", _textColor);
             
-            _imagesGrid.AddChild(hintLabel);
+            int fontSize = (int)Mathf.Max(finalCardWidth * 0.16f, 12); 
+            nameLabel.AddThemeFontSizeOverride("font_size", fontSize); 
+            
+            vbox.AddChild(nameLabel);
+
+            _imagesGrid.AddChild(card);
         }
+    }
+
+    private StyleBoxFlat CreateHintCardStyle()
+    {
+        StyleBoxFlat style = new StyleBoxFlat();
+        style.BgColor = new Color("#FFFFFF"); // Blanco puro para resaltar la imagen
+        
+        style.CornerRadiusTopLeft = 24;
+        style.CornerRadiusTopRight = 24;
+        style.CornerRadiusBottomRight = 24;
+        style.CornerRadiusBottomLeft = 24;
+
+        style.BorderColor = new Color("#D1D1D1"); // Borde gris perla
+        style.BorderWidthTop = 2;
+        style.BorderWidthLeft = 2;
+        style.BorderWidthRight = 2;
+        style.BorderWidthBottom = 6; // Relieve inferior estilo jelly
+
+        return style;
     }
 
     public void GenerateKeyboard()
