@@ -305,7 +305,21 @@ public partial class UIManager : Control
             imageRect.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
             imageRect.SizeFlagsVertical = Control.SizeFlags.ExpandFill; 
             
-            imageRect.Texture = GD.Load<Texture2D>("res://icon.svg"); 
+            //imageRect.Texture = GD.Load<Texture2D>("res://icon.svg"); 
+                        // NUEVO: Carga dinámica de imágenes
+            string objectName = objects[i]; // Ej: "Cuchillo"
+            string imagePath = $"res://Assets/Images/{objectName}.png";
+
+            if (ResourceLoader.Exists(imagePath))
+            {
+                imageRect.Texture = GD.Load<Texture2D>(imagePath);
+            }
+            else
+            {
+                // Si te olvidaste de agregar un PNG, pone el logo de Godot para que no crashee
+                imageRect.Texture = GD.Load<Texture2D>("res://icon.svg");
+                GD.PrintErr($"FALTA IMAGEN: No se encontró {imagePath}");
+            }
             vbox.AddChild(imageRect);
 
             Label nameLabel = new Label();
