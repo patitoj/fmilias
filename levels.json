@@ -1,18 +1,50 @@
 [
   {
-	"family_name": "COCINA",
-	"objects": ["Cuchillo", "Horno", "Sartén", "Licuadora", "Espátula","Cuchillo", "Horno", "Sartén", "Licuadora", "Espátula","Cuchillo", "Horno", "Sartén", "Licuadora", "Espátula"]
+    "family_name": "COCINA",
+    "objects": ["Cuchillo", "Horno", "Sartén", "Licuadora", "Espátula", "Rallador", "Olla", "Tostadora", "Batidora", "Colador", "Cuchara", "Tenedor"]
   },
   {
-	"family_name": "GIMNASIO",
-	"objects": ["Mancuerna", "Barra", "Polea", "Colchoneta", "Pesa"]
+    "family_name": "GIMNASIO",
+    "objects": ["Mancuerna", "Barra", "Polea", "Colchoneta", "Pesa", "Caminadora", "Elíptica", "Escalador", "Banco", "Discos", "Soga", "entrenador"]
   },
   {
-	"family_name": "HARDWARE",
-	"objects": ["Procesador", "Memoria", "Placa", "Disco", "Fuente"]
+    "family_name": "HARDWARE",
+    "objects": ["Procesador", "Memoria", "Placa", "Disco", "Fuente", "Gabinete", "Cooler", "Monitor", "Teclado", "Mouse", "Tarjeta", "Puerto"]
   },
   {
-	"family_name": "LITERATURA",
-	"objects": ["Camus", "Wilde", "Rulfo", "Borges", "Poe"]
+    "family_name": "AUTORES",
+    "objects": ["Camus", "Wilde", "Rulfo", "Borges", "Poe", "Cortázar", "Kafka", "Orwell", "Austen", "Dickens", "Tolstoy", "Hesse"]
+  },
+  {
+    "family_name": "CAMPING",
+    "objects": ["Carpa", "Linterna", "Brújula", "Fósforo", "Cantimplora", "Navaja", "Bolsa", "Mochila", "Cuerda", "Mapa", "Hacha", "Fogata"]
+  },
+  {
+    "family_name": "JARDINERIA",
+    "objects": ["Pala", "Rastrillo", "Maceta", "Regadera", "Tijera", "Tierra", "Semilla", "Manguera", "Abono", "Guante", "Carretilla", "Podadora"]
+  },
+  {
+    "family_name": "PLAYA",
+    "objects": ["Arena", "Ola", "Toalla", "Sombrilla", "Protector", "Caracol", "Balde", "Tabla", "Palmera", "Gaviota", "Malla", "Pelota"]
+  },
+  {
+    "family_name": "ASTRONOMIA",
+    "objects": ["Estrella", "Planeta", "Cometa", "Galaxia", "Telescopio", "Nebulosa", "Satélite", "Órbita", "Meteorito", "Luna", "Sol", "Agujero"]
+  },
+  {
+    "family_name": "ARTE",
+    "objects": ["Pincel", "Lienzo", "Paleta", "Acuarela", "Óleo", "Caballete", "Escultura", "Arcilla", "Boceto", "Lápiz", "Carboncillo", "Marco"]
+  },
+  {
+    "family_name": "MASCOTAS",
+    "objects": ["Perro", "Gato", "Loro", "Pez", "Hámster", "Tortuga", "Conejo", "Correa", "Collar", "Hueso", "Cama", "Plato"]
+  },
+  {
+    "family_name": "COSTURA",
+    "objects": ["Aguja", "Hilo", "Tela", "Tijera", "Alfiler", "Botón", "Dedal", "Cinta", "Cierre", "Máquina", "Patrón", "Metro"]
+  },
+  {
+    "family_name": "HERRAMIENTAS",
+    "objects": ["Martillo", "Pinza", "Llave", "Taladro", "Serrucho", "Clavo", "Tornillo", "Tuerca", "Cinta", "Nivel", "Lija", "Metro"]
   }
 ]

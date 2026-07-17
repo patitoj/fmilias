@@ -179,11 +179,11 @@ public partial class GameManager : Node2D
                 UpdateGameState();
                 SaveCurrentProgress(); // Guarda el nuevo error cometido y el reset de letras
             }
-            else
+            /*else
             {
                 GD.Print("Game Over. Reiniciando nivel.");
                 StartLevel(_currentLevelIndex, 0, ""); // Si pierde el nivel completo, se limpia ese nivel
-            }
+            }*/
         }
     }
 

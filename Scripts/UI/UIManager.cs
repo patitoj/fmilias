@@ -243,7 +243,7 @@ public partial class UIManager : Control
     {
         foreach (Node child in _imagesGrid.GetChildren()) child.QueueFree();
 
-        int objectsToShow = 2 + mistakes;
+        int objectsToShow = Mathf.Min(2 + mistakes, 12);
         if (objectsToShow > objects.Count) objectsToShow = objects.Count;
 
         // --- 1. LÓGICA DE COLUMNAS ---
@@ -259,7 +259,8 @@ public partial class UIManager : Control
         float screenWidth = GetViewportRect().Size.X;
         float screenHeight = GetViewportRect().Size.Y;
 
-        float safeWidth = screenWidth * 0.94f;
+        //float safeWidth = screenWidth * 0.94f;
+        float safeWidth = columns == 4 ? screenWidth * 0.86f : screenWidth * 0.94f;
         float safeHeight = screenHeight * 0.55f; 
 
         // Para que las cartas no cambien de tamaño mientras se van sumando del 1 al 9, 
@@ -308,7 +309,7 @@ public partial class UIManager : Control
             //imageRect.Texture = GD.Load<Texture2D>("res://icon.svg"); 
                         // NUEVO: Carga dinámica de imágenes
             string objectName = objects[i]; // Ej: "Cuchillo"
-            string imagePath = $"res://Assets/Images/{objectName}.png";
+            string imagePath = $"res://Assets/Images/{objectName}.webp";
 
             if (ResourceLoader.Exists(imagePath))
             {
@@ -316,7 +317,7 @@ public partial class UIManager : Control
             }
             else
             {
-                // Si te olvidaste de agregar un PNG, pone el logo de Godot para que no crashee
+                // Si te olvidaste de agregar un WEBP, pone el logo de Godot para que no crashee
                 imageRect.Texture = GD.Load<Texture2D>("res://icon.svg");
                 GD.PrintErr($"FALTA IMAGEN: No se encontró {imagePath}");
             }
