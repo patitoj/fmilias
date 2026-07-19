@@ -3,42 +3,63 @@ using Godot;
 public partial class MainMenu : Control
 {
     private Button _playButton;
+    private Tween _buttonTween;
+    private Vector2 _originalScale = Vector2.One;
 
     public override void _Ready()
     {
-        _playButton = GetNode<Button>("CenterContainer/VBoxContainer/PlayButton");
-        _playButton.Pressed += OnPlayButtonPressed;
+        // Enlazamos el botón (ajustá la ruta si tu jerarquía es distinta)
+        _playButton = GetNode<Button>("MainContainer/PlayButton");
+        _playButton.PivotOffset = _playButton.Size / 2.0f;
 
-        // Evaluamos dinámicamente si el botón debe decir Jugar o Continuar
-        if (SaveSystem.HasSavedGame())
-        {
-            _playButton.Text = "Continuar";
-        }
-        else
-        {
-            _playButton.Text = "Jugar";
-        }
+        // Conectamos las señales nativas del botón a nuestros métodos
+        _playButton.MouseEntered += OnButtonHoverEnter;
+        _playButton.MouseExited += OnButtonHoverExit;
+        _playButton.ButtonDown += OnButtonPressDown;
+        _playButton.ButtonUp += OnButtonPressUp;
     }
 
-    private void OnPlayButtonPressed()
+    // Método central para animar la escala de forma fluida
+    private void AnimateButtonScale(Vector2 targetScale, float duration)
     {
-        // Dirige al jugador al espacio de juego principal
+        // Si hay una animación reproduciéndose, la matamos para que no se superpongan
+        if (_buttonTween != null && _buttonTween.IsValid())
+        {
+            _buttonTween.Kill();
+        }
+
+        // Creamos la nueva animación con un efecto de transición "Back" (da ese pequeño rebote)
+        _buttonTween = CreateTween().SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.Out);
+        _buttonTween.TweenProperty(_playButton, "scale", targetScale, duration);
+    }
+
+    // --- SEÑALES ---
+
+    // Cuando el mouse/dedo entra: se agranda un 5%
+    private void OnButtonHoverEnter()
+    {
+        AnimateButtonScale(_originalScale * 1.05f, 0.2f);
+    }
+
+    // Cuando el mouse/dedo sale: vuelve a la normalidad
+    private void OnButtonHoverExit()
+    {
+        AnimateButtonScale(_originalScale, 0.2f);
+    }
+
+    // Cuando se aprieta el botón: se encoge un 5% (se hunde)
+    private void OnButtonPressDown()
+    {
+        AnimateButtonScale(_originalScale * 0.95f, 0.1f);
+    }
+
+    // Cuando se suelta el botón: vuelve al tamaño de Hover y arranca el juego
+    private void OnButtonPressUp()
+    {
+        // Vuelve a estar un poco grande porque el mouse sigue encima
+        AnimateButtonScale(_originalScale * 1.05f, 0.2f);
+        
+        // ¡Acá llamaremos al cambio de escena al GameManager!
         GetTree().ChangeSceneToFile("res://Scenes/game_manager.tscn");
-    }
-
-
-	public override void _Input(InputEvent @event)
-    {
-        // Si es un evento de teclado, la tecla fue presionada, y es F12
-        if (@event is InputEventKey keyEvent && keyEvent.Pressed && keyEvent.Keycode == Key.F12)
-        {
-            // 1. Borramos el archivo físico usando el método que ya teníamos
-            SaveSystem.ClearSave();
-            
-            GD.Print("¡Modo Debug: Partida borrada!");
-            
-            // 2. Recargamos la escena actual para que el botón vuelva a decir "Jugar"
-            GetTree().ReloadCurrentScene();
-        }
     }
 }
