@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://bkhb1i7r4kyhu"]
 
 [ext_resource type="Script" uid="uid://cw5chi2clerlr" path="res://Scripts/UI/SplashScreen.cs" id="1_6b1b0"]
+[ext_resource type="Texture2D" uid="uid://dh71ww3xoe4hj" path="res://Assets/Images/LoadingGato.webp" id="2_h5jmx"]
+[ext_resource type="FontFile" uid="uid://fpxki7h747fh" path="res://Assets/Fonts/Fredoka_Condensed-Bold.ttf" id="3_hnr0x"]
 
 [node name="SplashScreen" type="Control" unique_id=805173050]
 layout_mode = 3
@@ -11,42 +13,46 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_6b1b0")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=1657454085]
+[node name="Background" type="ColorRect" parent="." unique_id=1657454085]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.27893874, 0.45596564, 0.75561774, 1)
+color = Color(0.99215686, 0.9647059, 0.8901961, 1)
 
-[node name="TitleLabel" type="Label" parent="." unique_id=1728254935]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=585250092]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -36.0
-offset_top = -11.5
-offset_right = 36.0
-offset_bottom = 11.5
+offset_left = -202.0
+offset_top = -134.5
+offset_right = 202.0
+offset_bottom = 134.5
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/font_size = 48
-text = "FAMILIAS"
-horizontal_alignment = 1
-vertical_alignment = 1
+pivot_offset = Vector2(200, 125)
 
-[node name="StatusLabel" type="Label" parent="." unique_id=1411369070]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -44.0
-offset_right = 44.0
-offset_bottom = 23.0
-grow_horizontal = 2
-text = "Cargando..."
+[node name="Gato" type="TextureRect" parent="VBoxContainer" unique_id=1493171702]
+custom_minimum_size = Vector2(220, 220)
+layout_mode = 2
+texture = ExtResource("2_h5jmx")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Spacer" type="Control" parent="VBoxContainer" unique_id=53553773]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="VBoxContainer" unique_id=174939138]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.22745098, 0.22745098, 0.2509804, 1)
+theme_override_fonts/font = ExtResource("3_hnr0x")
+theme_override_font_sizes/font_size = 36
+text = "Cargando ..."
 horizontal_alignment = 1
 vertical_alignment = 1

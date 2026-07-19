@@ -221,4 +221,22 @@ public partial class GameManager : Node2D
                 break;
         }
     }*/
+
+    public override void _Input(InputEvent @event)
+    {
+        // Detectamos si la tecla presionada es F12
+        if (@event is InputEventKey keyEvent && keyEvent.Pressed && !keyEvent.Echo)
+        {
+            if (keyEvent.Keycode == Key.F12)
+            {
+                GD.Print("F12 presionado: Reiniciando al nivel 0...");
+                
+                // Borramos el progreso guardado para asegurar que no reanude donde quedó
+                SaveSystem.ClearSave();
+                
+                // Reiniciamos al nivel 0, con 0 errores y sin letras en la respuesta
+                StartLevel(0, 0, "");
+            }
+        }
+    }
 }

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://barfixvkar47x"]
 
 [ext_resource type="Script" uid="uid://ba1vwqtarb6w4" path="res://Scripts/UI/MainMenu.cs" id="1_28flt"]
-[ext_resource type="Texture2D" uid="uid://dh71ww3xoe4hj" path="res://Assets/Images/resultado.webp" id="2_1ehe0"]
+[ext_resource type="Texture2D" uid="uid://ca0iryq84g3jd" path="res://Assets/Images/title.webp" id="2_1ehe0"]
 [ext_resource type="FontFile" uid="uid://fpxki7h747fh" path="res://Assets/Fonts/Fredoka_Condensed-Bold.ttf" id="2_48xlc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1ka5s"]
@@ -71,15 +71,6 @@ size_flags_vertical = 4
 texture = ExtResource("2_1ehe0")
 expand_mode = 1
 stretch_mode = 5
-
-[node name="Title" type="Label" parent="MainContainer" unique_id=1857230258]
-layout_mode = 2
-text = "FAMILIAS"
-
-[node name="MidSpacer" type="Control" parent="MainContainer" unique_id=475774425]
-visible = false
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
 
 [node name="PlayButton" type="Button" parent="MainContainer" unique_id=1449526233]
 custom_minimum_size = Vector2(500, 260)
